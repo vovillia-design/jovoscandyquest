@@ -1,0 +1,123 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Jovo's Candy Quest</title>
+<style>
+:root{
+  --bg1:#fff7fb;--bg2:#e9f7ff;--ink:#27243a;--muted:#77758a;--panel:#ffffffdd;
+  --shadow:0 14px 40px #4d3c661c,0 3px 10px #4d3c6615;--radius:22px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink)}
+body{background:
+ radial-gradient(circle at 15% 10%,#ffd8ed 0 9%,transparent 24%),
+ radial-gradient(circle at 90% 15%,#d9f4ff 0 11%,transparent 27%),
+ linear-gradient(145deg,var(--bg1),var(--bg2));overflow-x:hidden}
+button{font:inherit;border:0;cursor:pointer}
+.app{min-height:100vh;padding:18px;display:flex;justify-content:center}
+.shell{width:min(1240px,100%);position:relative}
+.topbar{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;margin-bottom:14px}
+.brand{font-weight:950;font-size:clamp(24px,4vw,42px);letter-spacing:-1.5px;line-height:1}
+.brand span{display:block;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#8d789a;margin-top:5px}
+.pillrow{display:flex;gap:9px;flex-wrap:wrap}
+.pill{background:var(--panel);border:1px solid #ffffffcc;box-shadow:var(--shadow);border-radius:999px;padding:10px 14px;min-width:92px;text-align:center}
+.pill small{display:block;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.pill b{font-size:19px}
+.actions{justify-content:flex-end}
+.iconbtn{width:44px;height:44px;border-radius:14px;background:#fff;box-shadow:var(--shadow);font-size:20px}
+.main{display:grid;grid-template-columns:230px minmax(460px,620px) 260px;gap:16px;align-items:start}
+.card{background:var(--panel);backdrop-filter:blur(14px);border:1px solid #fff;box-shadow:var(--shadow);border-radius:var(--radius)}
+.side{padding:16px}
+.sectiontitle{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:#858096;margin-bottom:10px}
+.objective{display:flex;gap:10px;align-items:center;padding:10px;border-radius:15px;background:#ffffff9c;margin:8px 0;border:1px solid #ffffff}
+.objicon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:#f5eef9}
+.objtext{flex:1}.objtext b{display:block;font-size:13px}.objtext span{font-size:12px;color:var(--muted)}
+.progress{height:7px;border-radius:99px;background:#e8e4ed;overflow:hidden;margin-top:5px}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff6aa8,#8e79ff);border-radius:inherit;transition:width .25s}
+.jovo{overflow:hidden;position:relative;min-height:240px}.jovo img{width:100%;display:block;object-fit:cover;object-position:center top}.jovo .caption{padding:12px 14px 15px}.caption b{font-size:18px}.caption p{font-size:12px;color:var(--muted);margin:4px 0 0;line-height:1.4}
+.boardwrap{padding:14px;position:relative}
+.board{width:min(100%,600px);aspect-ratio:1/1;margin:auto;display:grid;grid-template-columns:repeat(9,1fr);gap:5px;padding:8px;border-radius:25px;background:linear-gradient(145deg,#e9d9ee,#b9c7df);box-shadow:inset 0 2px 0 #fff,0 20px 40px #4b35652a;touch-action:none}
+.cell{position:relative;min-width:0;min-height:0;border-radius:14px;background:#ffffff47;box-shadow:inset 0 1px 1px #fff7,inset 0 -2px 4px #72638118;display:grid;place-items:center}
+.candy{width:86%;height:86%;border-radius:32% 36% 40% 34%;position:relative;transition:transform .12s,filter .12s;box-shadow:inset 7px 7px 10px #fff7,inset -8px -10px 12px #0002,0 4px 5px #51445a2a;user-select:none}
+.candy:before{content:"";position:absolute;width:38%;height:19%;left:15%;top:11%;background:#fff9;border-radius:99px;transform:rotate(-22deg);filter:blur(.4px)}
+.candy:after{content:"";position:absolute;width:12%;height:12%;right:17%;bottom:15%;background:#fff5;border-radius:50%}
+.candy[data-type="0"]{background:linear-gradient(145deg,#ff88b5,#e73377)}
+.candy[data-type="1"]{background:linear-gradient(145deg,#ffdf70,#f29a25)}
+.candy[data-type="2"]{background:linear-gradient(145deg,#86e9ff,#2695e9)}
+.candy[data-type="3"]{background:linear-gradient(145deg,#b99aff,#6a42d7)}
+.candy[data-type="4"]{background:linear-gradient(145deg,#8de9a0,#26aa69)}
+.candy[data-type="5"]{background:linear-gradient(145deg,#ff9c79,#e54b38)}
+.candy.selected{transform:scale(1.12);filter:brightness(1.18);outline:3px solid #fff;box-shadow:0 0 0 5px #8d70e866,inset 7px 7px 10px #fff7,inset -8px -10px 12px #0002}
+.striped-h:after,.striped-v:after{content:"";position:absolute;inset:12% 8%;border-radius:30%;background:repeating-linear-gradient(0deg,#fff9 0 5px,transparent 5px 10px);opacity:.8}
+.striped-v:after{background:repeating-linear-gradient(90deg,#fff9 0 5px,transparent 5px 10px)}
+.wrapped{border-radius:45% 55% 48% 52%}
+.wrapped:after{content:"✦";background:none;color:#fff;position:absolute;inset:0;display:grid;place-items:center;font-size:26px;text-shadow:0 2px 4px #0005}
+.colorbomb{border-radius:50%!important;background:radial-gradient(circle at 32% 25%,#fff 0 5%,#25202b 6% 72%,#08070b 100%)!important}
+.colorbomb:after{content:"✦✦";background:none;color:#ffdc67;inset:0;width:100%;height:100%;display:grid;place-items:center;font-size:18px;transform:none}
+.lock{position:absolute;inset:0;border-radius:14px;border:3px solid #aeb3c8;box-shadow:inset 0 0 0 4px #fff6;background:#aab2c533;z-index:4;pointer-events:none}
+.lock:after{content:"🔒";position:absolute;inset:0;display:grid;place-items:center;font-size:15px;filter:drop-shadow(0 1px 1px #0005)}
+.jelly{position:absolute;inset:3px;border-radius:13px;border:3px solid #ff9bc8aa;background:#ffb9df25;pointer-events:none;z-index:1}
+.jelly.layer2{border-width:5px;background:#ffb9df42}
+.blocker{position:absolute;inset:5px;border-radius:12px;background:linear-gradient(145deg,#79524a,#3f2724);box-shadow:inset 4px 4px 6px #fff2,inset -5px -6px 7px #0007;z-index:5;display:grid;place-items:center;color:#fff;font-weight:950;font-size:16px}
+.cell > .candy{z-index:2}
+.fx{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:20}
+.scorepop{position:absolute;font-weight:950;color:#fff;text-shadow:0 2px 5px #6c477e;animation:pop 750ms ease-out forwards;font-size:16px}
+@keyframes pop{0%{transform:translate(-50%,0) scale(.7);opacity:0}20%{opacity:1}100%{transform:translate(-50%,-55px) scale(1.15);opacity:0}}
+.shake{animation:shake .35s ease}.pulse{animation:pulse .45s ease}
+@keyframes shake{20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+@keyframes pulse{50%{transform:scale(1.035)}}
+.legend{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.legend span{font-size:10px;font-weight:800;padding:5px 8px;border-radius:99px;background:#fff;border:1px solid #eee}
+.boosters{display:grid;gap:9px}.boost{padding:11px;border-radius:16px;background:#fff;border:1px solid #eee;display:flex;align-items:center;gap:9px;text-align:left}.boost .bi{font-size:23px}.boost b{font-size:12px}.boost small{display:block;color:var(--muted);font-size:10px}.boost.active{outline:3px solid #9b83ff55;background:#f4f0ff}
+.bottom{margin-top:14px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px}.hint{font-size:11px;color:var(--muted)}.primary{background:linear-gradient(135deg,#ff65a4,#8b74ff);color:#fff;padding:11px 16px;border-radius:13px;font-weight:900;box-shadow:0 7px 15px #8b74ff35}
+.overlay{position:fixed;inset:0;background:#28213c88;backdrop-filter:blur(8px);display:none;place-items:center;padding:18px;z-index:100}.overlay.show{display:grid}.modal{width:min(600px,100%);padding:24px;text-align:center}.modal h2{font-size:38px;margin:0 0 5px}.modal p{color:var(--muted)}.stars{font-size:50px;letter-spacing:7px;margin:15px}.modalstats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:18px 0}.stat{background:#f7f4fa;padding:12px;border-radius:15px}.stat small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;font-weight:800}.stat b{font-size:19px}
+.map{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.levelbtn{aspect-ratio:1;border-radius:20px;background:#fff;box-shadow:0 6px 15px #4d3c6617;font-weight:950;font-size:22px;position:relative}.levelbtn small{display:block;font-size:10px;color:var(--muted)}.levelbtn.locked{filter:grayscale(1);opacity:.5}.levelbtn .mini{font-size:14px;color:#f0a43a;letter-spacing:0}.maphead{display:flex;justify-content:space-between;align-items:center}.danger{background:#fff0f3;color:#c04b66;padding:10px 13px;border-radius:12px;font-weight:800}
+.toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%) translateY(20px);background:#28213c;color:#fff;padding:11px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:.25s;z-index:200;font-size:12px;font-weight:800}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:1050px){.main{grid-template-columns:200px minmax(420px,1fr)}.right{display:none}}
+@media(max-width:720px){.app{padding:9px}.topbar{grid-template-columns:1fr auto}.topbar .center{grid-column:1/-1;grid-row:2}.brand{font-size:30px}.main{display:block}.left{display:none}.boardwrap{padding:8px}.board{gap:3px;padding:5px;border-radius:18px}.cell{border-radius:9px}.candy{border-radius:30%}.bottom{flex-direction:column}.hint{order:2;text-align:center}.map{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="app"><div class="shell">
+  <header class="topbar">
+    <div class="brand">JOVO'S CANDY QUEST<span>9×9 match • plan • crush • cascade</span></div>
+    <div class="center pillrow">
+      <div class="pill"><small>Level</small><b id="levelNo">1</b></div>
+      <div class="pill"><small>Score</small><b id="score">0</b></div>
+      <div class="pill"><small>Moves</small><b id="moves">0</b></div>
+    </div>
+    <div class="actions pillrow"><button class="iconbtn" id="mapBtn" title="Level map">🗺️</button><button class="iconbtn" id="pauseBtn" title="Pause">Ⅱ</button><button class="iconbtn" id="muteBtn" title="Mute">🔊</button></div>
+  </header>
+  <div class="main">
+    <aside class="left card side">
+      <div class="sectiontitle">Objectives</div><div id="objectives"></div>
+      <div class="sectiontitle" style="margin-top:18px">Specials</div>
+      <div class="legend"><span>4 → stripe</span><span>L/T → wrap</span><span>5 → bomb</span></div>
+      <div class="sectiontitle" style="margin-top:18px">Best</div><div id="bestBox" style="font-weight:900;font-size:13px">0 pts</div>
+    </aside>
+    <section>
+      <div class="card boardwrap"><div id="board" class="board" aria-label="9 by 9 candy board"></div><div id="fx" class="fx"></div></div>
+      <div class="card bottom">
+        <div class="hint" id="hint">Tap a candy, then tap an adjacent candy — or swipe.</div>
+        <button class="primary" id="restartBtn">↻ Restart Level</button>
+      </div>
+    </section>
+    <aside class="right card side">
+      <div class="sectiontitle">Boosters</div>
+      <div class="boosters">
+        <button class="boost" data-boost="hammer"><div class="bi">🔨</div><div><b>Lollipop Hammer</b><small>Hit one candy/blocker</small></div></button>
+        <button class="boost" data-boost="switch"><div class="bi">🔄</div><div><b>Hand Switch</b><small>Swap any two candies</small></div></button>
+        <button class="boost" data-boost="shuffle"><div class="bi">🔀</div><div><b>Shuffle</b><small>Rebuild a playable board</small></div></button>
+      </div>
+      <div class="sectiontitle" style="margin-top:18px">Jovo</div>
+      <div class="jovo card"><img id="jovoImg" alt="Jovo character reference"><div class="caption"><b>Jovo</b><p id="jovoLine">Stay sharp. Every move counts.</p></div></div>
+    </aside>
+  </div>
+</div></div>
+
+<div class="overlay" id="modal"><div class="modal card" id="modalInner"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="game.js" defer></script>
+
+</body></html>
