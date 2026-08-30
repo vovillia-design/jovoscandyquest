@@ -1,0 +1,599 @@
+# Candy Crush Game Recreation Benchmark
+
+Recreate Candy Crush as a complete, polished, immediately playable browser game.
+
+The finished result must reproduce the recognizable core gameplay, visual identity, controls, mechanics, board behavior, progression, interface, feedback, and overall experience of Candy Crush as faithfully as reasonably possible.
+
+Do not create a superficial mockup, static demonstration, decorative board, or simplified match-3 scene that merely resembles Candy Crush. Build an actual functioning game with the systems necessary for repeated play, strategic decisions, level completion, failure, progression, and replayability.
+
+Use your own knowledge of Candy Crush to fill in appropriate details and polish rather than waiting for every mechanic to be individually specified.
+
+Where exact reproduction is impractical, implement the closest functional approximation rather than omitting the feature.
+
+The game must be immediately playable when launched.
+
+## General Requirements
+
+Build the game as a self-contained browser experience.
+
+It must include:
+
+- A fully functional match-3 game board.
+- A 9×9 candy grid.
+- Multiple visually distinct candy colors/types.
+- Mouse controls.
+- Touch controls.
+- Swipe-based candy swapping on touch devices.
+- Valid and invalid swap detection.
+- Match detection.
+- Cascading matches.
+- Gravity.
+- Candy replenishment.
+- Scoring.
+- Limited moves.
+- Level objectives.
+- Win and loss states.
+- Multiple levels.
+- Persistent progression.
+- High-score tracking.
+- Star ratings.
+- Special candies.
+- Obstacles/blockers.
+- Boosters.
+- Appropriate animation and audiovisual-style feedback implemented without requiring external assets.
+
+The game should feel like a real match-3 puzzle game rather than a technical demonstration of match detection.
+
+## Core Board
+
+Use a 9×9 board as the primary playfield.
+
+Each board cell must be clearly readable and maintain a consistent size and alignment.
+
+Candies must remain contained within their cells and the playable board must remain completely inside its intended visual container at normal desktop sizes.
+
+The layout should also adapt gracefully to smaller browser windows and touch-oriented displays.
+
+Generate a mixture of candy types with clearly different:
+
+- Colors
+- Shapes
+- Decorations
+- Highlights
+- Silhouettes
+
+Do not rely exclusively on subtle color changes to distinguish candy types.
+
+The player must be able to quickly identify every candy type at a glance.
+
+## Initial Board Generation
+
+When creating a level, generate a valid playable board.
+
+Avoid beginning a level with large quantities of accidental pre-existing matches.
+
+The board should settle into a stable starting configuration before player interaction begins.
+
+The generated board should have at least one legal move available.
+
+If the board ever reaches a state with no legal moves, automatically reshuffle it into a playable state.
+
+The reshuffle must preserve the player's current level state where appropriate rather than silently restarting the entire level.
+
+## Candy Swapping
+
+Allow the player to select adjacent candies and swap them.
+
+Support both:
+
+- Click/tap selection
+- Drag/swipe interaction
+
+Only horizontally or vertically adjacent candies may be swapped.
+
+Diagonal swaps are not valid.
+
+A normal swap should only remain in place when it creates a valid match.
+
+If a swap creates no match and does not activate a valid special-candy interaction:
+
+1. Animate the candies swapping.
+2. Determine that the move is invalid.
+3. Animate them returning to their original positions.
+4. Do not consume a move.
+
+Valid moves consume one move.
+
+Input must be temporarily protected while cascades and board-resolution animations are occurring so that overlapping player actions cannot corrupt the board state.
+
+## Match Detection
+
+Detect horizontal and vertical groups of three or more identical candies.
+
+Matches must resolve reliably regardless of whether they were produced by:
+
+- A direct player swap
+- Falling candies
+- Cascades
+- Special candies
+- Booster effects
+- Chain reactions
+
+Matched candies disappear and award score.
+
+After candies are removed:
+
+1. Remaining candies fall downward.
+2. Empty spaces are filled.
+3. New candies enter from above.
+4. The board is checked again.
+5. Additional matches resolve automatically.
+
+Continue until the board reaches a stable state.
+
+## Cascades
+
+Implement genuine cascade behavior.
+
+If falling candies create another match, that match must automatically resolve without requiring another player move.
+
+Support arbitrarily long cascade chains until no matches remain.
+
+Cascades should provide escalating visual and scoring feedback so large chain reactions feel rewarding.
+
+Do not stop resolution after only one secondary match.
+
+## Special Candies
+
+Implement recognizable Candy Crush-style special candies.
+
+### Striped Candy
+
+Creating a four-candy line should generate a striped candy.
+
+Support both orientations:
+
+- Horizontal striped candy
+- Vertical striped candy
+
+Activating one clears its corresponding full row or column.
+
+Its appearance must clearly communicate its orientation.
+
+### Wrapped Candy
+
+Matches that form suitable T-shaped or L-shaped configurations should create a wrapped candy.
+
+Wrapped candies should produce a large local area explosion.
+
+Their behavior should approximate Candy Crush's multi-stage explosive effect rather than behaving like an ordinary matched candy.
+
+### Color Bomb
+
+Matching five candies in a straight line should create a color bomb.
+
+The color bomb must look substantially different from normal candies.
+
+Swapping a color bomb with a normal candy should remove candies matching that candy's color across the board.
+
+## Special Candy Interactions
+
+Special candies must participate properly in chain reactions.
+
+Where reasonably practical, support combinations between special candies rather than treating them as unrelated effects.
+
+Special-candy activation should be capable of triggering other special candies caught in its effect.
+
+Chain reactions must resolve coherently without leaving invalid board state behind.
+
+## Objectives
+
+Levels must have actual objectives beyond merely accumulating arbitrary points.
+
+Support multiple objective types.
+
+### Score Objective
+
+Reach a required score before running out of moves.
+
+### Jelly Objective
+
+Place jelly beneath designated board cells.
+
+Matching or otherwise clearing candies over jelly removes the jelly.
+
+The level is complete when all required jelly has been cleared.
+
+Jelly must remain visually distinguishable beneath candies without making the candy itself unreadable.
+
+### Color Collection Objective
+
+Require the player to collect specified quantities of particular candy colors.
+
+Removing candies of those colors contributes toward the objective.
+
+Display progress clearly.
+
+Allow levels to combine objectives where appropriate.
+
+## Moves
+
+Each level has a finite move count.
+
+Display remaining moves prominently.
+
+A move should only be deducted after a valid player action.
+
+Automatic cascades do not consume additional moves.
+
+Special-candy chain reactions do not consume additional moves.
+
+When no moves remain:
+
+- Complete the level if all mandatory objectives have been satisfied.
+- Otherwise trigger the failure state.
+
+## Blockers
+
+Include gameplay obstacles so later levels are not simply differently colored copies of the first level.
+
+### Jelly
+
+Jelly occupies the layer underneath a candy.
+
+Clearing a candy on that tile damages or removes the jelly.
+
+### Blockers
+
+Include solid or destructible blocker cells that interfere with ordinary board behavior.
+
+Blockers should be visually distinct from candies.
+
+They should require appropriate adjacent matches, direct hits, or special-candy effects to remove depending upon their behavior.
+
+### Locked Candies
+
+Support candies that begin locked in place.
+
+Locked candies cannot be moved normally until their lock has been broken.
+
+Matches or appropriate effects should remove the lock.
+
+Clearly distinguish the lock from the candy underneath it.
+
+## Boosters
+
+Include usable boosters that give the player additional tactical options.
+
+Implement boosters such as:
+
+### Lollipop Hammer
+
+Allow the player to directly remove a chosen candy or damage an appropriate blocker.
+
+### Hand Switch
+
+Allow the player to swap two candies without requiring the swap to immediately produce a normal match.
+
+### Shuffle
+
+Rearrange the current candies while preserving the rest of the level state.
+
+Booster controls must clearly indicate:
+
+- What booster is selected.
+- When the player is in booster-targeting mode.
+- What constitutes a valid target.
+
+Using a booster must not leave the game stuck in an input mode.
+
+## Scoring
+
+Award points for clearing candies.
+
+Award additional value for:
+
+- Larger matches
+- Special candies
+- Cascades
+- Chain reactions
+- Clearing blockers/objectives
+
+Display the current score continuously.
+
+Each level should define score thresholds for star ratings.
+
+## Star Ratings
+
+Provide a three-star performance system.
+
+Display the player's progress toward the next star during play where practical.
+
+At level completion, award between one and three stars according to score thresholds.
+
+Persist the best star rating earned for completed levels.
+
+Replaying a level must not replace a better previous result with a worse one.
+
+## Level Progression
+
+Include a meaningful sequence of approximately 12 playable levels.
+
+Do not simply regenerate exactly the same level twelve times.
+
+Levels should vary through combinations of:
+
+- Board configuration
+- Move limits
+- Score requirements
+- Jelly layouts
+- Candy collection requirements
+- Blockers
+- Locked candies
+- Difficulty
+- Objective combinations
+
+Early levels should introduce mechanics gradually.
+
+Later levels should combine mechanics and require more deliberate play.
+
+Completing a level unlocks subsequent levels.
+
+Allow completed levels to be replayed.
+
+## Level Selection
+
+Provide a level-selection/progression interface.
+
+Clearly distinguish:
+
+- Current/unlocked levels
+- Completed levels
+- Locked levels
+- Star ratings
+
+The player should be able to return to the level-selection interface between games.
+
+## Persistent Progress
+
+Use browser-local persistence so progress survives refreshing or reopening the game.
+
+Persist at least:
+
+- Highest unlocked level
+- Completed levels
+- Best score per level
+- Best star rating per level
+
+The game must remain playable if persistent storage is unavailable.
+
+## Interface
+
+Provide a polished game interface with a bright candy-themed visual presentation.
+
+The interface should clearly communicate:
+
+- Current level
+- Score
+- Remaining moves
+- Objectives
+- Objective progress
+- Star progress
+- Available boosters
+- Board state
+- Win state
+- Loss state
+
+Do not allow UI elements to overlap the board or make important information unreadable.
+
+The board should remain the primary visual focus.
+
+## Candy Presentation
+
+Candies should have a glossy, dimensional, confectionery appearance.
+
+Use procedural CSS/canvas/vector-style rendering where necessary rather than depending on downloaded art.
+
+Give candies:
+
+- Highlights
+- Shading
+- Rounded forms
+- Distinct silhouettes
+- Decorative details
+- Strong color separation
+
+Special candies must be immediately distinguishable from ordinary candies.
+
+Avoid making several candy types so visually similar that the player has to inspect them closely to tell them apart.
+
+## Animation
+
+Animate important gameplay actions.
+
+Include animation for:
+
+- Candy swapping
+- Invalid swap reversal
+- Match removal
+- Falling candies
+- New candy entry
+- Cascades
+- Special candy creation
+- Special candy activation
+- Explosions
+- Row clears
+- Column clears
+- Color bomb effects
+- Objective completion
+- Score changes
+- Level completion
+- Failure
+- Board reshuffling
+
+Animations should improve readability without making the game feel sluggish.
+
+Board logic and visual state must remain synchronized.
+
+## Feedback
+
+Provide strong visual feedback for successful matches and larger events.
+
+Large cascades and special combinations should feel more dramatic than ordinary three-candy matches.
+
+Use particles, flashes, scaling, floating score indicators, screen effects, or similar lightweight procedural effects where appropriate.
+
+Do not let effects obscure the board long enough to interfere with gameplay.
+
+## Win State
+
+When all required objectives are completed, finish the level successfully.
+
+Show:
+
+- Level completed
+- Final score
+- Stars earned
+- Objective completion
+- Appropriate celebratory effects
+
+Provide clear controls for:
+
+- Continuing to the next level
+- Replaying the level
+- Returning to level selection
+
+## Failure State
+
+If the player exhausts the available moves without completing the required objectives, display a clear failure state.
+
+Show enough information for the player to understand why the level failed.
+
+Provide controls for:
+
+- Retrying immediately
+- Returning to level selection
+
+Do not require a page reload to retry.
+
+## Board Stability and State Integrity
+
+Board resolution must be deterministic enough to avoid corrupt or contradictory states.
+
+Prevent:
+
+- Candies occupying the same cell
+- Empty cells remaining after resolution
+- Matches failing to register
+- Candies visually appearing in one cell while logically occupying another
+- Moves being deducted twice
+- Cascades prematurely stopping
+- Input occurring during destructive board transitions
+- Objectives failing to update
+- Special candies being silently ignored
+- Locked candies moving while locked
+- Blockers behaving like normal candies
+- Infinite cascade/resolution loops
+
+Every removal event should correctly propagate to scoring, objectives, blockers, specials, gravity, and subsequent match detection.
+
+## Responsive Behavior
+
+The entire game must fit sensibly within the browser viewport.
+
+Scale the board and surrounding interface as necessary.
+
+Do not allow important controls or portions of the board to fall outside the visible game area.
+
+Maintain usable candy sizes and legible text.
+
+Touch targets should remain comfortably selectable.
+
+## Controls
+
+Desktop:
+
+- Click a candy and then an adjacent candy to swap.
+- Drag toward an adjacent candy to swap where supported.
+- Click booster buttons to activate boosters.
+- Click UI controls for navigation and level management.
+
+Touch:
+
+- Tap candies to select them.
+- Swipe toward an adjacent candy to swap.
+- Tap boosters and their targets.
+
+Prevent browser gestures from interfering with board interaction where appropriate.
+
+## Accessibility and Readability
+
+Do not communicate candy identity through color alone.
+
+Different candy types should also have shape or decorative differences.
+
+Keep text legible against the colorful background.
+
+Maintain strong contrast for objective counters, remaining moves, and score.
+
+Buttons must have obvious hover/pressed/selected states.
+
+## Procedural / Self-Contained Assets
+
+Do not depend upon external image, audio, font, or CDN assets for the core game.
+
+Create the required presentation procedurally using browser-native technologies such as:
+
+- HTML
+- CSS
+- JavaScript
+- Canvas
+- SVG where useful
+
+The game must continue to function when opened locally without an internet connection.
+
+## Technical Robustness
+
+The game must launch directly into a usable interface.
+
+There must be no required installation process, build step, server, login, or external dependency.
+
+Avoid console errors during normal play.
+
+Restarting, retrying, navigating between levels, activating boosters, and repeatedly playing levels must not accumulate broken state or duplicate event handlers.
+
+All major mechanics must actually function rather than merely appearing as buttons or labels.
+
+## Overall Quality Bar
+
+The result should be recognizable as a genuine Candy Crush-style game from both its appearance and behavior.
+
+Prioritize:
+
+1. Correct match-3 mechanics.
+2. Reliable board resolution.
+3. Satisfying cascades.
+4. Functional special candies.
+5. Special-candy chain reactions.
+6. Meaningful level objectives.
+7. Level progression.
+8. Blockers and locked candies.
+9. Boosters.
+10. Responsive, readable presentation.
+11. Animation and game feel.
+12. Persistence and replayability.
+13. Polish.
+
+Do not reduce the project to a generic match-3 prototype simply because implementing the deeper systems is more difficult.
+
+Where a feature cannot be reproduced exactly, build the closest coherent functional approximation.
+
+The finished result must be immediately playable and sufficiently complete that someone can play through multiple levels, encounter changing objectives and obstacles, create and combine special candies, use boosters, win and lose levels, earn stars, unlock progression, replay previous stages, and retain their progress.
+
+You are responsible for deciding the architecture, implementation details, scope priorities, supporting systems, balancing, presentation, and polish necessary to make the recreation coherent.
+
+Go as far as the available environment and capabilities reasonably allow.
+
+Do not explain how you would build it.
+
+Build it.
